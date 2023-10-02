@@ -1,0 +1,49 @@
+<!-- form to fill out an employee review -->
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="flex flex-col items-center">
+    <form class="flex flex-col items-center" hx-post="/review" hx-target="#review" hx-swap="outerHTML">
+        <div class="text-4xl font-bold p-2">
+            Review
+        </div>
+        <div class="flex flex-col items-center">
+            <div class="text-2xl p-2">
+                <label for="title">Title</label>
+            </div>
+            <input class="border-2 rounded-2xl px-4 py-2" type="text" name="title" id="title" />
+        </div>
+        <div class="flex flex-col items-center">
+            <div class="text-2xl p-2">
+                <label for="description">Description</label>
+            </div>
+            <textarea class="border-2 rounded-2xl px-4 py-2" name="description" id="description" cols="30"
+                rows="10"></textarea>
+        </div>
+        <div class="flex flex-col items-center">
+            <div class="text-2xl p-2">
+                <label for="rating">Rating</label>
+            </div>
+            <input class="border-2 rounded-2xl px-4 py-2" type="number" name="rating" id="rating" min="1" max="5" />
+        </div>
+        <div class="flex flex-col items-center">
+            <div class="text-2xl p-2">
+                <label for="employee">Employee</label>
+            </div>
+            <select class="border-2 rounded-2xl px-4 py-2" name="employee" id="employee">
+                {% for employee in employees %}
+                <option value="{{ employee.id }}">{{ employee.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class class="flex flex-col items-center" hx-post="/review" hx-target="#review" hx-swap="outerHTML">
+            <button class="border-2 rounded-2xl px-4 py-2" type="submit" name="submit" id="submit">
+                Submit
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
