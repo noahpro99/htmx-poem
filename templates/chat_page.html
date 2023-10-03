@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="flex flex-row h-screen">
+  <div class="w-1/4 bg-gray-200 p-4">
+    <div class="font-bold text-2xl">Chats</div>
+    <a href="/new-chat"
+      class="p-2 border-2 rounded-xl hover:bg-gray-100 hover:shadow-md shadow-sm border-gray-300 block mb-2">
+      <div class="text-blue-500 hover:text-blue-700 font-bold text-center">
+        New Chat
+      </div>
+    </a>
+    {% for chat in chats %}
+    <a href="/chat/{{chat.id}}"
+      class="p-2 border-2 rounded-xl hover:bg-gray-100 hover:shadow-md shadow-sm border-gray-300 block mb-2">
+      <div class="text-blue-500 hover:text-blue-700 font-bold text-center">
+        {{chat.name}}
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  <div class="w-3/4 p-4">
+    {% include "chat_window.html" %}
+  </div>
+</div>
+{% endblock %}
