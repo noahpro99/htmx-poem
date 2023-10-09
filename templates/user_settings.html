@@ -1,0 +1,50 @@
+{% if editing %}
+
+<form hx-put="/settings" hx-target="this" hx-swap="outerHTML" class="p-6 bg-white rounded-md">
+  <div class="mb-4">
+    <label for="first_name" class="block text-gray-700 font-bold mb-2">First Name</label>
+    <input type="text" name="first_name" id="first_name" value="{{user.first_name}}"
+      class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+  </div>
+  <div class="mb-4">
+    <label for="last_name" class="block text-gray-700 font-bold mb-2">Last Name</label>
+    <input type="text" name="last_name" id="last_name" value="{{user.last_name}}"
+      class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+  </div>
+  <div class="mb-4">
+    <label for="email" class="block text-gray-700 font-bold mb-2">Email</label>
+    <input type="email" name="email" id="email" value="{{user.email}}"
+      class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+  </div>
+  <div class="flex justify-between">
+    <button
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      type="submit">Submit</button>
+    <button
+      class="bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      hx-get="/settings?editing=false">Cancel</button>
+  </div>
+</form>
+
+{% else %}
+
+<div hx-target="this" hx-swap="outerHTML" class="bg-white p-6 max-w-md">
+  <div class="mb-4">
+    <label for="first_name" class="block text-gray-700 font-bold mb-2">First Name</label>
+    <div class="rounded py-2 px-3 text-gray-700">{{user.first_name}}</div>
+  </div>
+  <div class="mb-4">
+    <label for="last_name" class="block text-gray-700 font-bold mb-2">Last Name</label>
+    <div class="rounded py-2 px-3 text-gray-700">{{user.last_name}}</div>
+  </div>
+  <div class="mb-4">
+    <label for="email" class="block text-gray-700 font-bold mb-2">Email</label>
+    <div class="rounded py-2 px-3 text-gray-700">{{user.email}}</div>
+  </div>
+  <button hx-get="/settings?editing=true"
+    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+    Edit
+  </button>
+</div>
+
+{% endif %}

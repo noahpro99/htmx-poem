@@ -1,8 +1,9 @@
-mod chats;
+mod conversation;
+mod entity;
+mod settings;
 
-use poem::{
-    listener::TcpListener, Route, Server, EndpointExt,
-};
+use poem::{listener::TcpListener, EndpointExt, Route, Server};
+use sea_orm::{Database, DatabaseConnection};
 
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
@@ -11,12 +12,19 @@ async fn main() -> Result<(), std::io::Error> {
 
     let openai_key = std::env::var("OPENAI_API_KEY").expect("OPENAI_API_KEY not set");
 
+    let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
+    let db: DatabaseConnection = Database::connect(db_url)
+        .await
+        .expect("Failed to connect to database");
+
     let app = Route::new()
-        .nest("/chat", chats::chat_routes())
-        .nest("/send-message", chats::message_routes())
+        .nest("/conversation", conversation::conversation_route())
+        .nest("/settings", settings::route())
+        .data(db)
         .data(openai_key);
 
-    Server::new(TcpListener::bind("127.0.0.1:3000"))
+    let port = std::env::var("PORT").unwrap_or("3000".to_string());
+    Server::new(TcpListener::bind(format!("0.0.0.0:{}", port)))
         .run(app)
         .await
 }
