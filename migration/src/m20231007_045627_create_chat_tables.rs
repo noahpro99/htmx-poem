@@ -1,11 +1,47 @@
-use sea_orm_migration::prelude::*;
+use sea_orm_migration::{
+    prelude::*,
+    sea_orm::{EnumIter, Iterable},
+    sea_query::extension::postgres::Type,
+};
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
 
+#[derive(DeriveIden)]
+enum Conversation {
+    Table,
+    Id,
+    Title,
+}
+
+#[derive(DeriveIden)]
+enum Chat {
+    Table,
+    Id,
+    Role,
+    Content,
+    ConversationId,
+}
+
+#[derive(Iden, EnumIter)]
+pub enum ChatRole {
+    Table,
+    User,
+    Assistant,
+}
+
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+        manager
+            .create_type(
+                Type::create()
+                    .as_enum(ChatRole::Table)
+                    .values(ChatRole::iter().skip(1))
+                    .to_owned(),
+            )
+            .await?;
+        
         manager
             .create_table(
                 Table::create()
@@ -36,6 +72,10 @@ impl MigrationTrait for Migration {
                             .primary_key(),
                     )
                     .col(ColumnDef::new(Chat::Content).string().not_null())
+                    .col(
+                        ColumnDef::new(Chat::Role)
+                            .enumeration(ChatRole::Table, ChatRole::iter().skip(1)),
+                    )
                     .col(ColumnDef::new(Chat::ConversationId).integer().not_null())
                     .foreign_key(
                         ForeignKey::create()
@@ -60,19 +100,4 @@ impl MigrationTrait for Migration {
             .await?;
         Ok(())
     }
-}
-
-#[derive(DeriveIden)]
-enum Conversation {
-    Table,
-    Id,
-    Title,
-}
-
-#[derive(DeriveIden)]
-enum Chat {
-    Table,
-    Id,
-    Content,
-    ConversationId,
 }

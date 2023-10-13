@@ -4,3 +4,4 @@ pub mod prelude;
 
 pub mod chat;
 pub mod conversation;
+pub mod sea_orm_active_enums;

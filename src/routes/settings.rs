@@ -1,8 +1,8 @@
 use askama::Template;
 use poem::{
-    get, handler, patch, post,
+    get, handler, patch, post, put,
     web::{Form, Html, Path, Query},
-    Error, put,
+    Error,
 };
 use serde::{Deserialize, Serialize};
 

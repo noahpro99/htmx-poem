@@ -1,6 +1,5 @@
-mod conversation;
 mod entity;
-mod settings;
+mod routes;
 
 use poem::{listener::TcpListener, EndpointExt, Route, Server};
 use sea_orm::{Database, DatabaseConnection};
@@ -18,8 +17,9 @@ async fn main() -> Result<(), std::io::Error> {
         .expect("Failed to connect to database");
 
     let app = Route::new()
-        .nest("/conversation", conversation::conversation_route())
-        .nest("/settings", settings::route())
+        .nest("/conversation", routes::conversation::route())
+        .nest("/settings", routes::settings::route())
+        .nest("/", routes::index::route())
         .data(db)
         .data(openai_key);
 
